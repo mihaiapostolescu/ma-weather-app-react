@@ -1,6 +1,7 @@
 import './App.css'
 import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Select } from '@mantine/core';
 import Search from './components/search/search';
+import CurrentWeather from './components/current-weather/current-weather';
 
 function App() {
   
@@ -13,14 +14,14 @@ function App() {
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Navbar>
         <Grid style={{ height: '100%', width: '100%' }} p={20}>
-            <Grid.Col span="auto" style={{ color: "blue" }}>  
-            <Text fs="italic">Logo</Text>      
+            <Grid.Col span="auto" style={{ color: "black" }}>  
+            <Text fs="bold">maweather</Text>      
               <Stack align="left" justify="space-around" h="100%" sx={(theme) => ({ backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] })}>
                 <Text fs="italic"></Text>
-                <Text fs="italic">Current Weather</Text>
+                <CurrentWeather />
               </Stack>
             </Grid.Col>
-            <Grid.Col span={5} style={{ textAlign: "center", backgroundColor: "red" }}>
+            <Grid.Col span="content" style={{ textAlign: "center", backgroundColor: "red" }} md={6}>
               <div className="container">
               <Search onSearchChange={handleOnSearchChange}/>
               </div>
