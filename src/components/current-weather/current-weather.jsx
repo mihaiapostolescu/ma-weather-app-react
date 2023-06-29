@@ -1,15 +1,39 @@
 import "./current-weather.css"
 
-const CurrentWeather = () => {
+const CurrentWeather = ({data}) => {
+
+    const mainTimeStamp = data.hourly[0].dt
+    const mainDate = new Date(mainTimeStamp * 1000)
+    const mainOptions = {
+        weekday: "long",
+        // year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+
+    let AtmosphereWeather = [
+    "Mist",
+    "Smoke",
+    "Haze",
+    "Dust",
+    "Fog",
+    "Sand",
+    "Dust",
+    "Ash",
+    "Squall",
+    ]
+    let dataCurrentWeather = data.current.weather[0].main
+    let dataCurrentDescription = data.current.weather[0].description
+
     return (
         <div className="weather-app flexr">
           <div className="flexc">
-            <h1 className="temp">16&#176;</h1>
+            <h1 className="temp">{Math.round(data.current.temp)}&#176;</h1>
             <div className="city-time">
-              <h1 className="city-name">London</h1>
+              <h1 className="city-name">{data.city}</h1>
               <small>
-                <p className="time">06:09</p>
-                <p className="date">Monday Sep 19</p>
+                <p className="time">{mainDate.toLocaleString().split(",")[1].split(":")[0]+ ":" + mainDate.toLocaleString().split(",")[1].split(":")[1]}</p>
+                <p className="date">{mainDate.toLocaleString("en-US", mainOptions)}</p>
               </small>
             </div>
             <div className="weather flexr">
@@ -19,7 +43,7 @@ const CurrentWeather = () => {
                 alt="Icon for weather forecast"
                 title="weather forecast"
               />
-              <p className="weather-forecast">Sunny</p>
+              <p className="weather-forecast">{data.current.weather[0].description}</p>
             </div>
           </div>
       </div>
