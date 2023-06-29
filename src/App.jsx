@@ -1,8 +1,15 @@
 import './App.css'
 import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Select } from '@mantine/core';
+import Search from './components/search/search';
 
 function App() {
+  
+  const handleOnSearchChange = (searchData) => {
+    console.log(searchData);
+  }
+
   return (
+
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Navbar>
         <Grid style={{ height: '100%', width: '100%' }} p={20}>
@@ -14,12 +21,9 @@ function App() {
               </Stack>
             </Grid.Col>
             <Grid.Col span={5} style={{ textAlign: "center", backgroundColor: "red" }}>
-              <Select
-                placeholder="Search your favorite city here"
-                searchable
-                nothingFound="No options"
-                data={['Timisoara', 'Bucuresti', 'Svelte', 'Vue', 'Iasi']}
-              />
+              <div className="container">
+              <Search onSearchChange={handleOnSearchChange}/>
+              </div>
             </Grid.Col>
             <Grid.Col span="auto" style={{ textAlign: "right" }}>span=auto</Grid.Col>
           </Grid>
