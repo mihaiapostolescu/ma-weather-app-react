@@ -1,5 +1,6 @@
 import './App.css'
-import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Select } from '@mantine/core';
+import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Select, BackgroundImage, Center, Group, Image, Overlay, AspectRatio, Header, AppShell } from '@mantine/core';
+import { useElementSize } from '@mantine/hooks';
 import Search from './components/search/search';
 import CurrentWeather from './components/current-weather/current-weather';
 import { WEATHER_API_KEY, WEATHER_API_URL } from '../geoApi';
@@ -29,25 +30,56 @@ function App() {
   console.log(CurrentWeather);
   console.log(forecast);
 
+  const [visible] = useState(true);
+  const { ref, width, height2 } = useElementSize();
+
 
   return (
+    // <div className="body">
+    <>
 
+      <div className="background-picture">
+        <img
+          src="https://res.cloudinary.com/dewznnjqr/image/upload/v1681206379/maweatherapp/picture-clear-sky-day_nljg6p.jpg"
+          className="picture-weather-type"
+          alt="Picture of weather type"
+        />
+      </div>
+
+
+
+    {/* <div className="main-page"> */}
+      
     <MantineProvider withGlobalStyles withNormalizeCSS>
+
+    <Header height={{ base: 80, md: 70 }} style={{ width: '100%', zIndex: 4, backgroundColor: "white" }} fixed={true} >
+      <div>
+          <Grid style={{ height: '100%', width: '100%', zIndex: 3, minWidth: 350 }} p={20}>
+              <Grid.Col span="auto" style={{ color: "black" }} pb={20}>  
+              <Text fs="bold" pt={10}>maweather</Text>      
+              </Grid.Col>
+              <Grid.Col span="content" style={{ textAlign: "center"}} md={6}>
+                <div className="container">
+                <Search onSearchChange={handleOnSearchChange}/>
+                </div>
+              </Grid.Col>
+              <Grid.Col span="auto" style={{ textAlign: "right" }}></Grid.Col>
+            </Grid>
+        </div>
+      </Header>
+   
       <Navbar>
-        <Grid style={{ height: '100%', width: '100%' }} p={20}>
+        <Grid style={{ height: '100%', width: '100%', zIndex: 3 }} p={20}>
             <Grid.Col span="auto" style={{ color: "black" }} pb={20}>  
-            <Text fs="bold" pt={10}>maweather</Text>      
-              <Stack align="left" justify="space-around" h="100%">
+            <Text fs="bold" pt={10}></Text>      
+              <Stack align="left" justify="space-around" h="130%">
               {/* <Stack align="left" justify="space-around" h="100%" sx={(theme) => ({ backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[8] })}> */}
                 <Text fs="italic"></Text>
                 {/* <Search onSearchChange={handleOnSearchChange} /> */}
                 {currentWeather && <CurrentWeather data={currentWeather} />}
               </Stack>
             </Grid.Col>
-            <Grid.Col span="content" style={{ textAlign: "center", backgroundColor: "white" }} md={6}>
-              <div className="container">
-              <Search onSearchChange={handleOnSearchChange}/>
-              </div>
+            <Grid.Col span="content" style={{ textAlign: "center"}} md={6}>
             </Grid.Col>
             <Grid.Col span="auto" style={{ textAlign: "right" }}></Grid.Col>
           </Grid>
@@ -61,6 +93,9 @@ function App() {
           </Grid>
           </Navbar>
     </MantineProvider>
+    {/* </div> */}
+    {/* // </div> */}
+    </>
   );
 }
 

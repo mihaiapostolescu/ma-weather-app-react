@@ -2,3 +2,39 @@
     max-width: 1080px;
     margin: 0px auto;
 }
+
+.background-picture img {
+    min-height: 100%;
+    min-width: 1285px;
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.background-picture::before {
+    content: "";
+    background: rgba(0, 0, 0, 0.25);
+    min-height: 100%;
+    min-width: 1285px;
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+/* .body {
+    zoom: 1;
+    margin: 0;
+    font-family: Bariol, Helvetica, Arial, sans-serif;
+    background-color: white;
+    color: #fff;
+    position: relative;
+    transition: 500ms;
+    opacity: 1;
+    z-index: 3;
+    user-select: none;
+} */
