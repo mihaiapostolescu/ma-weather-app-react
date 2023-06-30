@@ -3,26 +3,31 @@ import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Sel
 import { useElementSize } from '@mantine/hooks';
 import Search from './components/search/search';
 import CurrentWeather from './components/current-weather/current-weather';
+import CurrentWeatherBackground from './components/current-weather/current-weather-background';
 import { WEATHER_API_KEY, WEATHER_API_URL } from '../geoApi';
 import { useState } from 'react';
 
 function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
+  const [currentWeatherBackground, setCurrentWeatherBackground] = useState(null);
 
   const handleOnSearchChange = (searchData) => {
     const [lat, lon] = searchData.value.split(" ");
 
     const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
     const forecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
+    const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
 
-    Promise.all([currentWeatherFetch, forecastFetch])
+    Promise.all([currentWeatherFetch, forecastFetch, currentWeatherBackgroundFetch])
     .then(async (response) => {
       const weatherResponse = await response[0].json();
       const forecastResponse = await response[1].json();
+      const weatherBackgroundResponse = await response[2].json();
 
       setCurrentWeather({ city: searchData.label, ...weatherResponse});
       setForecast({ city: searchData.label, ...forecastResponse});
+      setCurrentWeatherBackground({ city: searchData.label, ...weatherBackgroundResponse});
     })
     .catch((err) => console.log(err));
   }
@@ -35,21 +40,10 @@ function App() {
 
 
   return (
-    // <div className="body">
     <>
 
-      <div className="background-picture">
-        <img
-          src="https://res.cloudinary.com/dewznnjqr/image/upload/v1681206379/maweatherapp/picture-clear-sky-day_nljg6p.jpg"
-          className="picture-weather-type"
-          alt="Picture of weather type"
-        />
-      </div>
+    {currentWeatherBackground && <CurrentWeatherBackground data={currentWeatherBackground}/>}
 
-
-
-    {/* <div className="main-page"> */}
-      
     <MantineProvider withGlobalStyles withNormalizeCSS>
 
     <Header height={{ base: 80, md: 70 }} style={{ width: '100%', zIndex: 4, backgroundColor: "white" }} fixed={true} >
@@ -93,8 +87,6 @@ function App() {
           </Grid>
           </Navbar>
     </MantineProvider>
-    {/* </div> */}
-    {/* // </div> */}
     </>
   );
 }
