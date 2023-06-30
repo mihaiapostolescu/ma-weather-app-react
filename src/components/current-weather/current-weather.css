@@ -13,6 +13,12 @@ height: 100vh;
 font-size: calc(0.1em + 1vh + 0.5vw);
 } */
 
+.icon-weather-forecast,
+.forecast-weather-hour {
+  width: calc(3em + 1vw + 1vh);
+  height: calc(3em + 1vw + 1vh);
+}
+
 .temp {
 margin: 0;
 font-size: calc(4em + 1vw);

@@ -7,7 +7,7 @@ const Search = ({ onSearchChange }) => {
     const [search, setSearch] = useState(null);
 
     const loadOptions = (inputValue) => {
-            return fetch(`${VITE_GEO_API_URL}?namePrefix=${inputValue}`, geoApiOptions)
+            return fetch(`${VITE_GEO_API_URL}?minPopulation=10000&limit=10&namePrefix=${inputValue}`, geoApiOptions)
             .then((response) => response.json())
             .then((response) => {
                 return {

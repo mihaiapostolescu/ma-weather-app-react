@@ -35,25 +35,26 @@ function App() {
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Navbar>
         <Grid style={{ height: '100%', width: '100%' }} p={20}>
-            <Grid.Col span="auto" style={{ color: "black" }}>  
-            <Text fs="bold">maweather</Text>      
-              <Stack align="left" justify="space-around" h="100%" sx={(theme) => ({ backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] })}>
+            <Grid.Col span="auto" style={{ color: "black" }} pb={20}>  
+            <Text fs="bold" pt={10}>maweather</Text>      
+              <Stack align="left" justify="space-around" h="100%">
+              {/* <Stack align="left" justify="space-around" h="100%" sx={(theme) => ({ backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[8] })}> */}
                 <Text fs="italic"></Text>
                 {/* <Search onSearchChange={handleOnSearchChange} /> */}
                 {currentWeather && <CurrentWeather data={currentWeather} />}
               </Stack>
             </Grid.Col>
-            <Grid.Col span="content" style={{ textAlign: "center", backgroundColor: "red" }} md={6}>
+            <Grid.Col span="content" style={{ textAlign: "center", backgroundColor: "white" }} md={6}>
               <div className="container">
               <Search onSearchChange={handleOnSearchChange}/>
               </div>
             </Grid.Col>
-            <Grid.Col span="auto" style={{ textAlign: "right" }}>span=auto</Grid.Col>
+            <Grid.Col span="auto" style={{ textAlign: "right" }}></Grid.Col>
           </Grid>
       </Navbar>
 
-      <Navbar fixed={false} position={{ top: 0, left: 0 }} >
-        <Grid style={{ height: `100%` }}>
+      <Navbar>
+        <Grid tyle={{ height: '100%', width: '100%' }} p={20}>
             <Grid.Col span="auto" style={{ color: "blue"}}>span=auto</Grid.Col>
             <Grid.Col span={6} style={{ textAlign: "center", backgroundColor: "red", height: "100%"}}>span=6</Grid.Col>
             <Grid.Col span="auto" style={{ textAlign: "right"}}>span=auto</Grid.Col>
