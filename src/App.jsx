@@ -1,43 +1,84 @@
 import './App.css'
-import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Select, BackgroundImage, Center, Group, Image, Overlay, AspectRatio, Header, AppShell } from '@mantine/core';
-import { useElementSize } from '@mantine/hooks';
+import { MantineProvider, Container, Box, Grid, Navbar, Stack, Button, Text, Select, BackgroundImage, Center, Group, Image, Overlay, AspectRatio, Header, AppShell, rem, MediaQuery } from '@mantine/core';
+import { useElementSize, useMediaQuery } from '@mantine/hooks';
 import Search from './components/search/search';
 import CurrentWeather from './components/current-weather/current-weather';
 import CurrentWeatherBackground from './components/current-weather/current-weather-background';
 import { WEATHER_API_KEY, WEATHER_API_URL } from '../geoApi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function App() {
-  const [currentWeather, setCurrentWeather] = useState(null);
-  const [forecast, setForecast] = useState(null);
-  const [currentWeatherBackground, setCurrentWeatherBackground] = useState(null);
+  function App() {
+    const [currentWeather, setCurrentWeather] = useState(null);
+    const [forecast, setForecast] = useState(null);
+    const [currentWeatherBackground, setCurrentWeatherBackground] = useState(null);
+  
+    const handleOnSearchChange = (searchData) => {
+    }
+  
+    const getCityName = (lat, lon) => {
+      const apiKey = WEATHER_API_KEY;
+      const geoUrl = `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${apiKey}`;
+  
+      return new Promise((resolve, reject) => {
+        fetch(geoUrl)
+          .then((response) => response.json())
+          .then((geo) => {
+            const cityName = geo[0].name;
+            resolve(cityName);
+          })
+          .catch((error) => {
+            console.error(error);
+            reject(error);
+          });
+      });
+    };
+  
+    useEffect(() => {
+      const getCurrentLocation = () => {
+        return new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error('Geolocation is not supported by this browser.'));
+            return;
+          }
+  
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+              resolve({ latitude, longitude });
+            },
+            (error) => {
+              reject(error);
+            }
+          );
+        });
+      };
+  
+      getCurrentLocation()
+        .then((position) => {
+          const { latitude, longitude } = position;
+  
+          getCityName(latitude, longitude)
+            .then((cityName) => {
+              const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
+              const forecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
+              const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
+  
+              Promise.all([currentWeatherFetch, forecastFetch, currentWeatherBackgroundFetch])
+                .then(async (responses) => {
+                  const [weatherResponse, forecastResponse, weatherBackgroundResponse] = await Promise.all(responses.map(response => response.json()));
+                  setCurrentWeather({ city: cityName, ...weatherResponse });
+                  setForecast({ city: cityName, ...forecastResponse });
+                  setCurrentWeatherBackground({ city: cityName, ...weatherBackgroundResponse });
+                })
+                .catch((err) => console.log(err));
+            })
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
+    }, []);
 
-  const handleOnSearchChange = (searchData) => {
-    const [lat, lon] = searchData.value.split(" ");
-
-    const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
-    const forecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
-    const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
-
-    Promise.all([currentWeatherFetch, forecastFetch, currentWeatherBackgroundFetch])
-    .then(async (response) => {
-      const weatherResponse = await response[0].json();
-      const forecastResponse = await response[1].json();
-      const weatherBackgroundResponse = await response[2].json();
-
-      setCurrentWeather({ city: searchData.label, ...weatherResponse});
-      setForecast({ city: searchData.label, ...forecastResponse});
-      setCurrentWeatherBackground({ city: searchData.label, ...weatherBackgroundResponse});
-    })
-    .catch((err) => console.log(err));
-  }
-
-  console.log(CurrentWeather);
-  console.log(forecast);
-
-  const [visible] = useState(true);
-  const { ref, width, height2 } = useElementSize();
-
+  console.log(currentWeather);
 
   return (
     <>
@@ -46,7 +87,7 @@ function App() {
 
     <MantineProvider withGlobalStyles withNormalizeCSS>
 
-    <Header height={{ base: 80, md: 70 }} style={{ width: '100%', zIndex: 4, backgroundColor: "white" }} fixed={true} >
+    <Header height={{ base: 80, md: 80 }} style={{ width: '100%', zIndex: 4, backgroundColor: "white" }} fixed={true} >
       <div>
           <Grid style={{ height: '100%', width: '100%', zIndex: 3, minWidth: 350 }} p={20}>
               <Grid.Col span="auto" style={{ color: "black" }} pb={20}>  
