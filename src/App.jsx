@@ -10,24 +10,24 @@ import { useState, useEffect } from 'react';
 
   function App() {
     const [currentWeather, setCurrentWeather] = useState(null);
-    const [forecast, setForecast] = useState(null);
+    const [hourlyForecast, setHourlyForecast] = useState(null);
     const [currentWeatherBackground, setCurrentWeatherBackground] = useState(null);
   
     const handleOnSearchChange = (searchData) => {
       const [lat, lon] = searchData.value.split(" ");
  
       const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
-      const forecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
+      const hourlyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
       const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
  
-      Promise.all([currentWeatherFetch, forecastFetch, currentWeatherBackgroundFetch])
+      Promise.all([currentWeatherFetch, hourlyForecastFetch, currentWeatherBackgroundFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
-        const forecastResponse = await response[1].json();
+        const hourlyForecastResponse = await response[1].json();
         const weatherBackgroundResponse = await response[2].json();
  
         setCurrentWeather({ city: searchData.label, ...weatherResponse});
-        setForecast({ city: searchData.label, ...forecastResponse});
+        setHourlyForecast({ city: searchData.label, ...hourlyForecastResponse});
         setCurrentWeatherBackground({ city: searchData.label, ...weatherBackgroundResponse});
       })
       .catch((err) => console.log(err));
@@ -79,14 +79,14 @@ import { useState, useEffect } from 'react';
           getCityName(latitude, longitude)
             .then((cityName) => {
               const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
-              const forecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
+              const hourlyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
               const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
   
-              Promise.all([currentWeatherFetch, forecastFetch, currentWeatherBackgroundFetch])
+              Promise.all([currentWeatherFetch, hourlyForecastFetch, currentWeatherBackgroundFetch])
                 .then(async (responses) => {
-                  const [weatherResponse, forecastResponse, weatherBackgroundResponse] = await Promise.all(responses.map(response => response.json()));
+                  const [weatherResponse, hourlyForecastResponse, weatherBackgroundResponse] = await Promise.all(responses.map(response => response.json()));
                   setCurrentWeather({ city: cityName, ...weatherResponse });
-                  setForecast({ city: cityName, ...forecastResponse });
+                  setHourlyForecast({ city: cityName, ...hourlyForecastResponse });
                   setCurrentWeatherBackground({ city: cityName, ...weatherBackgroundResponse });
                 })
                 .catch((err) => console.log(err));
@@ -159,6 +159,7 @@ import { useState, useEffect } from 'react';
           direction="column"
           wrap="wrap"
          >
+          {hourlyForecast && <HourlyForecast data={hourlyForecast}/>}
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
