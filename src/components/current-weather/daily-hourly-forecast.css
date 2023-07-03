@@ -44,6 +44,10 @@
   padding: 1em 0em 1em 0em;
 }
 
+.now {
+  justify-content: space-between;
+}
+
 .hourly-forecast button,
 .daily-forecast button {
   position: relative;

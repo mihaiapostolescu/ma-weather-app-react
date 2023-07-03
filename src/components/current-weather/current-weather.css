@@ -13,6 +13,22 @@ height: 100vh;
 font-size: calc(0.1em + 1vh + 0.5vw);
 } */
 
+.weather-app {
+  font-weight: bold;
+}
+
+.time,
+.date,
+.weather-forecast {
+  font-size: large;
+}
+
+.weather-forecast {
+  padding-left: 0.5rem;
+  padding-top: 0.2rem; 
+  text-transform: capitalize;
+}
+
 .icon-weather-forecast,
 .forecast-weather-hour {
   width: calc(3em + 1vw + 1vh);
