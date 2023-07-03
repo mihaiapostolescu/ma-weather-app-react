@@ -4,7 +4,7 @@ const CurrentWeather = ({data}) => {
     const mainCurrentTimeStamp = data.current.dt
     const mainSunriseTimeStamp = data.current.sunrise
     const mainsunsetTimeStamp = data.current.sunset
-    const mainTimeStamp = data.minutely[0].dt
+    const mainTimeStamp = data.current.dt
     const mainDate = new Date(mainTimeStamp * 1000)
     const mainOptions = {
         weekday: "long",

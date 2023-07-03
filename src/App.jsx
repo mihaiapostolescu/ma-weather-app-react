@@ -5,30 +5,35 @@ import Search from './components/search/search';
 import CurrentWeather from './components/current-weather/current-weather';
 import CurrentWeatherBackground from './components/current-weather/current-weather-background';
 import HourlyForecast from './components/current-weather/hourly-forecast';
+import DailyForecast from './components/current-weather/daily-forecast';
 import { WEATHER_API_KEY, WEATHER_API_URL } from '../geoApi';
 import { useState, useEffect } from 'react';
 
   function App() {
     const [currentWeather, setCurrentWeather] = useState(null);
-    const [hourlyForecast, setHourlyForecast] = useState(null);
     const [currentWeatherBackground, setCurrentWeatherBackground] = useState(null);
+    const [hourlyForecast, setHourlyForecast] = useState(null);
+    const [dailyForecast, setDailyForecast] = useState(null);
   
     const handleOnSearchChange = (searchData) => {
       const [lat, lon] = searchData.value.split(" ");
  
       const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
-      const hourlyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
       const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
+      const hourlyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
+      const dailyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`);
  
-      Promise.all([currentWeatherFetch, hourlyForecastFetch, currentWeatherBackgroundFetch])
+      Promise.all([currentWeatherFetch, hourlyForecastFetch, currentWeatherBackgroundFetch, dailyForecastFetch])
       .then(async (response) => {
         const weatherResponse = await response[0].json();
-        const hourlyForecastResponse = await response[1].json();
-        const weatherBackgroundResponse = await response[2].json();
+        const weatherBackgroundResponse = await response[1].json();
+        const hourlyForecastResponse = await response[2].json();
+        const dailyForecastResponse = await response[3].json();
  
         setCurrentWeather({ city: searchData.label, ...weatherResponse});
-        setHourlyForecast({ city: searchData.label, ...hourlyForecastResponse});
         setCurrentWeatherBackground({ city: searchData.label, ...weatherBackgroundResponse});
+        setHourlyForecast({ city: searchData.label, ...hourlyForecastResponse});
+        setDailyForecast({ city: searchData.label, ...dailyForecastResponse});
       })
       .catch((err) => console.log(err));
     }
@@ -79,15 +84,17 @@ import { useState, useEffect } from 'react';
           getCityName(latitude, longitude)
             .then((cityName) => {
               const currentWeatherFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
-              const hourlyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
               const currentWeatherBackgroundFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
+              const hourlyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
+              const dailyForecastFetch = fetch(`${WEATHER_API_URL}/onecall?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}&units=metric`);
   
-              Promise.all([currentWeatherFetch, hourlyForecastFetch, currentWeatherBackgroundFetch])
+              Promise.all([currentWeatherFetch, hourlyForecastFetch, currentWeatherBackgroundFetch, dailyForecastFetch])
                 .then(async (responses) => {
-                  const [weatherResponse, hourlyForecastResponse, weatherBackgroundResponse] = await Promise.all(responses.map(response => response.json()));
+                  const [weatherResponse, hourlyForecastResponse, weatherBackgroundResponse, dailyForecastResponse] = await Promise.all(responses.map(response => response.json()));
                   setCurrentWeather({ city: cityName, ...weatherResponse });
-                  setHourlyForecast({ city: cityName, ...hourlyForecastResponse });
                   setCurrentWeatherBackground({ city: cityName, ...weatherBackgroundResponse });
+                  setHourlyForecast({ city: cityName, ...hourlyForecastResponse });
+                  setDailyForecast({ city: cityName, ...dailyForecastResponse});
                 })
                 .catch((err) => console.log(err));
             })
@@ -108,7 +115,7 @@ import { useState, useEffect } from 'react';
 
      <Header height={{ base: 70, md: 80 }} style={{ width: '100%', zIndex: 4, backgroundColor: "transparent" }} fixed={true} >
         <div className='opaque'>
-          <Grid style={{ height: '100%', width: '100%', zIndex: 3, minWidth: 350 }} pt={20} pl={20} pb={10}>
+          <Grid style={{ height: '100%', width: '100%', zIndex: 3, minWidth: 350 }} pt={20} pl={20} pb={10} pr={20}>
               <Grid.Col span="auto" style={{ color: "white" }} pb={20}>  
               <Text fw={700} pt={10} style={{ textAlign: "left" }}>maweather</Text>      
               </Grid.Col>
@@ -149,7 +156,7 @@ import { useState, useEffect } from 'react';
         </div>
       </Footer> */}
 
-      <Footer mt={100} >
+      <Footer mt={100} style={{ width: '98%', zIndex: 5, color: "white" }} >
         <Flex
           mih={50}
           bg="rgba(0, 0, 0, .3)"
@@ -158,21 +165,17 @@ import { useState, useEffect } from 'react';
           align="flex-start"
           direction="column"
           wrap="wrap"
+          width="100"
+          zIndex="6"
+          fw="700"
          >
           {hourlyForecast && <HourlyForecast data={hourlyForecast}/>}
-          <Button>Button 1</Button>
-          <Button>Button 2</Button>
-          <Button>Button 3</Button>
+          
+          {dailyForecast && <DailyForecast data={dailyForecast}/>}
+          
         </Flex>
       </Footer>
-
     </MantineProvider>
-
-    
-
-
-
-
     </>
   );
 }
