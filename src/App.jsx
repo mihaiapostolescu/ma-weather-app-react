@@ -6,6 +6,7 @@ import CurrentWeather from './components/current-weather/current-weather';
 import CurrentWeatherBackground from './components/current-weather/current-weather-background';
 import HourlyForecast from './components/current-weather/hourly-forecast';
 import DailyForecast from './components/current-weather/daily-forecast';
+import ToggleItem from './components/toggle/toggle';
 import { WEATHER_API_KEY, WEATHER_API_URL } from '../geoApi';
 import { useState, useEffect } from 'react';
 
@@ -124,7 +125,9 @@ function App() {
                   <Search onSearchChange={handleOnSearchChange} />
                 </div>
               </Grid.Col>
-              <Grid.Col span="auto" style={{ textAlign: "right" }}></Grid.Col>
+              <Grid.Col span="auto" style={{ textAlign: "right" }}>
+                {ToggleItem()}
+              </Grid.Col>
             </Grid>
           </div>
         </Header>
@@ -156,7 +159,7 @@ function App() {
         </div>
       </Footer> */}
 
-        <Footer mt={100} pr={30} style={{ width: '100%', zIndex: 5, color: "white" } } >
+        <Footer mt={100} pr={30} style={{ width: '100%', zIndex: 5, color: "white" }} >
           <Flex
             mih={50}
             bg="rgba(0, 0, 0, .3)"
